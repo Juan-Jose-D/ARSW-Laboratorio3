@@ -8,11 +8,15 @@ import org.springframework.stereotype.Service;
 public class GrammarChecker {
 
 	SpellChecker sc;
-
 	String x;
         
-        
-	public SpellChecker getSpellChecker() {
+	@Autowired
+	public GrammarChecker(SpellChecker sc){
+		this.sc = sc;
+	}
+
+
+	public SpellChecker getSpellChecker() {		
 		return sc;
 	}
 

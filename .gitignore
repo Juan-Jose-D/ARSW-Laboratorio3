@@ -1,4 +1,5 @@
 target/
+target
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -22,3 +23,6 @@ dist/
 nbdist/
 .nb-gradle/
 /nbproject/
+
+TallerIntroductorio/target/*
+TallerIntroductorio/target
