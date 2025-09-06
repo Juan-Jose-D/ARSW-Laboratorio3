@@ -1,3 +1,4 @@
+    
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -65,6 +66,18 @@ public class BlueprintsServices {
 
     public void updateBlueprint(String author, String bpname, Blueprint updatedBlueprint) throws BlueprintNotFoundException {
         bpp.updateBlueprint(author, bpname, updatedBlueprint);
+    }
+
+
+    public Set<String> getAllAuthors() {
+        Set<Blueprint> allBlueprints;
+        try {
+            allBlueprints = bpp.getAllBluePrints();
+        } catch (BlueprintNotFoundException e) {
+            return java.util.Collections.emptySet();
+        }
+        Set<String> authors = allBlueprints.stream().map(Blueprint::getAuthor).collect(java.util.stream.Collectors.toSet());
+        return authors;
     }
 
 }

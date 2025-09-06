@@ -62,17 +62,23 @@ var BlueprintApp = (function () {
             var ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar los puntos en el canvas
+            // Dibujar los puntos y líneas en el canvas
             if (blueprint.points.length > 0) {
                 ctx.beginPath();
                 ctx.moveTo(blueprint.points[0].x, blueprint.points[0].y);
-
-                // Dibujar segmentos de línea consecutivos
+                // Dibujar líneas entre puntos
                 for (var i = 1; i < blueprint.points.length; i++) {
                     ctx.lineTo(blueprint.points[i].x, blueprint.points[i].y);
                 }
-
                 ctx.stroke();
+
+                // Dibujar círculos en cada punto
+                ctx.fillStyle = '#007bff';
+                for (var i = 0; i < blueprint.points.length; i++) {
+                    ctx.beginPath();
+                    ctx.arc(blueprint.points[i].x, blueprint.points[i].y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
             }
 
             // Actualizar el nombre del blueprint en el DOM
@@ -87,6 +93,7 @@ var BlueprintApp = (function () {
     };
 })();
 
+
 $("#getBlueprintsBtn").on("click", function () {
     var authorInput = $("#authorInput").val();
     if (authorInput) {
@@ -95,4 +102,38 @@ $("#getBlueprintsBtn").on("click", function () {
     } else {
         alert("Por favor ingrese un nombre de autor.");
     }
+});
+
+// Crear blueprint
+$("#createBlueprintBtn").on("click", function () {
+    var author = $("#newAuthor").val();
+    var name = $("#newBlueprintName").val();
+    var pointsStr = $("#newPoints").val();
+    if (!author || !name || !pointsStr) {
+        alert("Por favor ingrese todos los campos para crear el blueprint.");
+        return;
+    }
+    // Parsear puntos: formato "10,20;30,40"
+    var points = pointsStr.split(";").map(function (pair) {
+        var coords = pair.split(",");
+        return { x: parseInt(coords[0]), y: parseInt(coords[1]) };
+    });
+    var blueprint = { author: author, name: name, points: points };
+    api.createBlueprint(blueprint, function () {
+        alert("Blueprint creado exitosamente.");
+        $("#newAuthor").val("");
+        $("#newBlueprintName").val("");
+        $("#newPoints").val("");
+    });
+});
+
+// Listar autores
+$("#listAuthorsBtn").on("click", function () {
+    api.getAuthors(function (authors) {
+        var html = "";
+        authors.forEach(function (author) {
+            html += `<li>${author}</li>`;
+        });
+        $("#authorsList").html(html);
+    });
 });
