@@ -1,3 +1,4 @@
+    
 package edu.eci.arsw.blueprints.controllers;
 
 /*
@@ -62,6 +63,14 @@ public class BlueprintsAPIController {
             Logger.getLogger(BlueprintsAPIController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @RequestMapping(value = "/authors", method = RequestMethod.GET)
+    public ResponseEntity<Set<String>> getAuthors() {
+        System.out.println("[DEBUG] GET /blueprints/authors called");
+        Set<String> authors = blueprintsServices.getAllAuthors();
+        System.out.println("[DEBUG] Authors found: " + authors);
+        return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{author}/{bpname}", method = RequestMethod.GET)

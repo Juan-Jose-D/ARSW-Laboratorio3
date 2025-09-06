@@ -87,6 +87,7 @@ var BlueprintApp = (function () {
     };
 })();
 
+
 $("#getBlueprintsBtn").on("click", function () {
     var authorInput = $("#authorInput").val();
     if (authorInput) {
@@ -95,4 +96,38 @@ $("#getBlueprintsBtn").on("click", function () {
     } else {
         alert("Por favor ingrese un nombre de autor.");
     }
+});
+
+// Crear blueprint
+$("#createBlueprintBtn").on("click", function () {
+    var author = $("#newAuthor").val();
+    var name = $("#newBlueprintName").val();
+    var pointsStr = $("#newPoints").val();
+    if (!author || !name || !pointsStr) {
+        alert("Por favor ingrese todos los campos para crear el blueprint.");
+        return;
+    }
+    // Parsear puntos: formato "10,20;30,40"
+    var points = pointsStr.split(";").map(function (pair) {
+        var coords = pair.split(",");
+        return { x: parseInt(coords[0]), y: parseInt(coords[1]) };
+    });
+    var blueprint = { author: author, name: name, points: points };
+    api.createBlueprint(blueprint, function () {
+        alert("Blueprint creado exitosamente.");
+        $("#newAuthor").val("");
+        $("#newBlueprintName").val("");
+        $("#newPoints").val("");
+    });
+});
+
+// Listar autores
+$("#listAuthorsBtn").on("click", function () {
+    api.getAuthors(function (authors) {
+        var html = "";
+        authors.forEach(function (author) {
+            html += `<li>${author}</li>`;
+        });
+        $("#authorsList").html(html);
+    });
 });
