@@ -62,17 +62,23 @@ var BlueprintApp = (function () {
             var ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar los puntos en el canvas
+            // Dibujar los puntos y líneas en el canvas
             if (blueprint.points.length > 0) {
                 ctx.beginPath();
                 ctx.moveTo(blueprint.points[0].x, blueprint.points[0].y);
-
-                // Dibujar segmentos de línea consecutivos
+                // Dibujar líneas entre puntos
                 for (var i = 1; i < blueprint.points.length; i++) {
                     ctx.lineTo(blueprint.points[i].x, blueprint.points[i].y);
                 }
-
                 ctx.stroke();
+
+                // Dibujar círculos en cada punto
+                ctx.fillStyle = '#007bff';
+                for (var i = 0; i < blueprint.points.length; i++) {
+                    ctx.beginPath();
+                    ctx.arc(blueprint.points[i].x, blueprint.points[i].y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
             }
 
             // Actualizar el nombre del blueprint en el DOM

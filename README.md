@@ -1,9 +1,16 @@
 
 # ARSW-Laboratorio3: Gestión de Planos Arquitectónicos
 
+[![Java](https://img.shields.io/badge/Java-17%2B-blue.svg)](https://www.oracle.com/java/)
+[![Maven](https://img.shields.io/badge/Maven-Build-brightgreen.svg)](https://maven.apache.org/)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-brightgreen.svg)
+
+
 ## Descripción General
 
 Este proyecto es una aplicación full-stack para la gestión de planos arquitectónicos, desarrollada con **Spring Boot**, **Java 17+**, **Maven**, y un frontend web moderno con **HTML, CSS y JavaScript (jQuery)**. Permite registrar, consultar, filtrar y visualizar planos, así como crear nuevos autores y planos desde la interfaz web.
+
+[https://github.com/ARSW-ECI-archive/SpringBoot_REST_API_Blueprints](https://github.com/ARSW-ECI-archive/SpringBoot_REST_API_Blueprints)
 
 ---
 
@@ -26,7 +33,7 @@ Este proyecto es una aplicación full-stack para la gestión de planos arquitect
 │   │   │   ├── model/                 # Entidades: Blueprint, Point
 │   │   │   ├── persistence/           # Interfaces y persistencia en memoria
 │   │   │   ├── services/              # Servicios y filtros
-│   │   │   └── ui/                    # Programa de prueba
+│   │   │   └── ui/                    # No se usa actualmente
 │   │   └── resources/
 │   │       ├── public/                # Frontend web (index.html, js, css)
 │   │       └── applicationContext.xml # Configuración Spring
@@ -57,50 +64,24 @@ Este proyecto es una aplicación full-stack para la gestión de planos arquitect
 	```bash
 	mvn spring-boot:run
 	```
-	El backend estará disponible en `http://localhost:8080`.
 
 ### Frontend (Web)
-1. Abre `src/main/resources/public/index.html` en tu navegador.
-2. La web se conecta automáticamente al backend local.
+
+Al ejecutar el backend el front estará disponible en `http://localhost:8080`.
 
 ---
 
 ## Funcionalidades
 
 - **Registrar planos:** Desde la web, puedes crear nuevos planos y autores.
-- **Consultar planos:** Buscar planos por autor y nombre.
+- **Consultar planos:** Buscar planos por autor.
 - **Visualizar planos:** Ver los puntos del plano en un canvas interactivo.
-- **Listar autores:** Ver todos los autores registrados.
-- **Filtrar planos:** El backend aplica filtros (redundancia o submuestreo) antes de retornar los datos.
-- **Persistencia en memoria:** Los datos se almacenan en memoria, sin base de datos.
+- **Listar autores:** Ver todos los autores registrados y sus planos.
+- **Filtrar planos:** El backend aplica filtros antes de retornar los datos.
+- **Persistencia en memoria:** Los datos se almacenan temporalmente en memoria, sin base de datos.
 
 ---
 
-## Endpoints REST principales
-
-### GET /blueprints
-Retorna todos los planos.
-
-### GET /blueprints/{author}
-Retorna todos los planos de un autor.
-
-### GET /blueprints/{author}/{bpname}
-Retorna un plano específico por autor y nombre.
-
-### POST /blueprints
-Crea un nuevo plano. Ejemplo de JSON:
-```json
-{
-  "author": "Juan",
-  "name": "Casa",
-  "points": [ {"x":10, "y":20}, {"x":30, "y":40} ]
-}
-```
-
-### GET /blueprints/authors
-Retorna todos los autores registrados.
-
----
 
 ## Uso de la Interfaz Web
 
@@ -109,14 +90,38 @@ Retorna todos los autores registrados.
 3. **Visualizar plano:** Haz clic en "Open" en la tabla para ver el plano en el canvas.
 4. **Crear plano:** Completa el formulario y haz clic en "Create Blueprint". El formato de puntos es `x1,y1;x2,y2;...`.
 
+
+![alt text](/img/image.png)
+
+![alt text](/img/image-1.png)
+
 ---
+
 
 ## Filtros de Planos
 
 El backend aplica uno de dos filtros configurables:
 - **Redundancia:** Elimina puntos consecutivos repetidos.
 - **Submuestreo:** Elimina 1 de cada 2 puntos.
-Puedes alternar el filtro cambiando la configuración en el backend.
+
+### ¿Cómo alternar el filtro?
+En el archivo `BlueprintsServices.java`, la inyección del filtro se realiza con:
+```java
+@Autowired
+public BlueprintsServices(BlueprintsPersistence bpp,
+	@Qualifier("redundancyFilter") BlueprintFilter blueprintFilter) {
+	this.bpp = bpp;
+	this.blueprintFilter = blueprintFilter;
+}
+```
+Para usar el filtro de submuestreo, cambia el qualifier a:
+```java
+@Qualifier("subsamplingFilter")
+```
+Guarda el archivo y reinicia el back para aplicar el cambio.
+
+### Uso desde la web
+Al consultar planos desde la interfaz web, el filtro configurado en el backend se aplica automáticamente a los datos retornados y visualizados.
 
 ---
 
@@ -130,19 +135,9 @@ Incluyen pruebas de persistencia y de los filtros.
 
 ---
 
-## Ejemplo de uso en código
-
-```java
-BlueprintsServices bs = new BlueprintsServices(...);
-Blueprint bp = new Blueprint("Juan", "Casa", new Point[]{new Point(0,0), new Point(1,1), new Point(1,1), new Point(2,2)});
-bs.addNewBlueprint(bp);
-Blueprint result = bs.getBlueprint("Juan", "Casa");
-System.out.println("Plano filtrado: " + result.getPoints());
-```
-
----
 
 ## Créditos y Autor
 
 **Autor:** Juan José Díaz ([github](https://github.com/Juan-Jose-D))
+
 **Institución:** Escuela Colombiana de Ingeniería Julio Garavito

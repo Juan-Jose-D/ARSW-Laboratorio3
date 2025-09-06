@@ -79,4 +79,5 @@ public class BlueprintsServices {
         Set<String> authors = allBlueprints.stream().map(Blueprint::getAuthor).collect(java.util.stream.Collectors.toSet());
         return authors;
     }
+
 }
