@@ -1,4 +1,3 @@
-
 # ARSW-Laboratorio3: Gestión de Planos Arquitectónicos
 
 [![Java](https://img.shields.io/badge/Java-17%2B-blue.svg)](https://www.oracle.com/java/)
@@ -132,6 +131,56 @@ Ejecuta las pruebas unitarias con:
 mvn test
 ```
 Incluyen pruebas de persistencia y de los filtros.
+
+---
+
+
+
+## Taller Introductorio: Spring y Principio de Inversión de Dependencias
+
+Este mini taller, ubicado en la carpeta `TallerIntroductorio`, ilustra el uso básico de Spring Framework para la inyección de dependencias y el principio de inversión de dependencias.
+
+### Descripción
+
+Se desarrolla una aplicación de análisis de textos que utiliza un verificador gramatical (`GrammarChecker`) y correctores ortográficos (`SpellChecker`). El corrector ortográfico puede ser de inglés o español, y se inyecta dinámicamente usando Spring y anotaciones.
+
+### Estructura
+
+```
+TallerIntroductorio/
+├── src/main/java/edu/eci/arsw/springdemo/
+│   ├── GrammarChecker.java
+│   ├── SpellChecker.java
+│   ├── EnglishSpellChecker.java
+│   ├── SpanishSpellChecker.java
+│   └── ui/Main.java
+├── src/main/resources/applicationContext.xml
+├── pom.xml
+├── README.md
+└── img/ (diagramas)
+```
+
+### Pasos principales
+
+1. Revisa el archivo `applicationContext.xml` para ver la configuración de escaneo de beans.
+2. Usa las anotaciones `@Service` y `@Autowired` para definir los beans y sus dependencias.
+3. Por defecto, se inyecta el corrector de inglés (`EnglishSpellChecker`). Puedes cambiar a español modificando la anotación o el bean activo.
+4. Ejecuta el programa de prueba en `Main.java` para verificar el funcionamiento:
+
+```java
+public static void main(String[] args) {
+	ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+	GrammarChecker gc = ac.getBean(GrammarChecker.class);
+	System.out.println(gc.check("la la la "));
+}
+```
+
+### ¿Cómo alternar el corrector?
+
+Modifica la anotación `@Primary` o el bean activo en la configuración para alternar entre `EnglishSpellChecker` y `SpanishSpellChecker`.
+
+### Recursos
+- [Documentación oficial de Spring Beans y DI](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-spring-beans-and-dependency-injection.html)
 
 ---
 
